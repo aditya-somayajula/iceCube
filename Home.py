@@ -42,7 +42,7 @@ def login():
                             st.error("User account is locked. Please reach out to the administrator.")
                         else:
                             userInfo_update = f"UPDATE IC_DB_APPLICATION.IC_SM_USERS.IC_TB_USER_INFO SET LAST_LOGIN_DATE = CURRENT_TIMESTAMP() WHERE USERNAME = '" + username + "'"
-                            session.sql(userInfo_update)
+                            session.sql(userInfo_update).collect()
                             st.success("Login successful!")
                             st.session_state["authenticated"] = True
                             st.session_state["email"] = dataFrame_userInfo.loc[0, 'EMAIL']
@@ -59,7 +59,7 @@ def login():
                     else:
                         if st.session_state["retry_count"] > 3:
                             userInfo_update = f"UPDATE IC_DB_APPLICATION.IC_SM_USERS.IC_TB_USER_INFO SET LOCKED_FLAG = TRUE WHERE USERNAME = '" + username + "'"
-                            session.sql(userInfo_update)
+                            session.sql(userInfo_update).collect()
                             st.error("Maximum retry attempts reached. User account is locked. Please reach out to the administrator.")
                         else:
                             st.session_state["retry_count"] += 1
